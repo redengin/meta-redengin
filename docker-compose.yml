@@ -1,0 +1,9 @@
+services:
+  crops:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      --pokydir $$POKY_DIR
+      --builddir $$BUILD_DIR
+      --target ${RECIPE:-core-image-minimal}
