@@ -1,9 +1,13 @@
 services:
-  crops:
+  yocto:
     build:
       context: .
       dockerfile: Dockerfile
-    command: >
-      --pokydir $$POKY_DIR
-      --builddir $$BUILD_DIR
-      --target ${RECIPE:-core-image-minimal}
+    user: ${DOCKER_USER?created files will be owned by UID:GID on host}
+    volumes:
+      - .:/opt/poky/meta-redengin:ro
+      - ./build:/tmp/build
+    working_dir: /tmp/build
+    environment:
+      - MACHINE=${YOCTO_MACHINE}
+    # command: --help
