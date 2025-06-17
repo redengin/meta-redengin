@@ -3,9 +3,26 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: base
     # user: ${DOCKER_USER?created files will be owned by UID:GID on host}
     user: ${DOCKER_USER:-0:0} # default to root access
     volumes:
       - .:/tmp/meta-redengin:ro
       - ./build:/tmp/build
     working_dir: /tmp/build
+
+  toaster:
+    ports:
+      - 8000:8000
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: toaster
+    # user: ${DOCKER_USER?created files will be owned by UID:GID on host}
+    user: ${DOCKER_USER:-0:0} # default to root access
+    volumes:
+      - .:/tmp/meta-redengin:ro
+      - ./build:/tmp/build
+    working_dir: /tmp/build
+    environment:
+      - BUILDDIR=/tmp/build
