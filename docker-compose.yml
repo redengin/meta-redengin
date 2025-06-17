@@ -1,13 +1,11 @@
 services:
-  yocto:
+  crops:
     build:
       context: .
       dockerfile: Dockerfile
-    user: ${DOCKER_USER?created files will be owned by UID:GID on host}
+    # user: ${DOCKER_USER?created files will be owned by UID:GID on host}
+    user: ${DOCKER_USER:-0:0} # default to root access
     volumes:
-      - .:/opt/poky/meta-redengin:ro
+      - .:/tmp/meta-redengin:ro
       - ./build:/tmp/build
     working_dir: /tmp/build
-    environment:
-      - MACHINE=${YOCTO_MACHINE}
-    # command: --help
