@@ -22,7 +22,7 @@ bitbake:
 			sh -c "BB_ENV_PASSTHROUGH_ADDITIONS='DISTRO MACHINE' \
 				   DISTRO=${BITBAKE_DISTRO} \
 				   MACHINE=${BITBAKE_MACHINE} \
-				bitbake ${RECIPE} --dry-run"
+				bitbake ${RECIPE}"
 
 # web interface for configuring and running builds
 .PHONY: toaster
@@ -30,3 +30,21 @@ toaster:
 	@DOCKER_USER=${DOCKER_USER} \
 		docker compose up toaster
 
+.PHONY: runqemu
+runqemu:
+	@DOCKER_USER=${DOCKER_USER} \
+		docker compose run --rm --remove-orphans qemu-kvm
+
+.PHONY: clean
+clean:
+	rm build/bitbake-cookerdaemon.log
+	rm bitbake.lock
+	rm bitbake.sock
+	rm -rf buildhistory
+	rm -rf cache
+	rm -rf downloads
+	rm pyshtables.py
+	rm -rf sstate-cache
+	rm -rf tmp-glibc
+	rm -rf tmp
+	rm -rf toaster_logs

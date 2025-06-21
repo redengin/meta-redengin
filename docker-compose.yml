@@ -5,11 +5,25 @@ services:
       dockerfile: Dockerfile
       target: base
     # user: ${DOCKER_USER?created files will be owned by UID:GID on host}
-    user: ${DOCKER_USER:-0:0} # default to root access
+    user: ${DOCKER_USER:-0:0} # default to root ownership
     volumes:
       - .:/tmp/meta-redengin:ro
       - ./build:/tmp/build
     working_dir: /tmp/build
+
+  qemu-kvm:
+    privileged: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    # user: ${DOCKER_USER?created files will be owned by UID:GID on host}
+    user: ${DOCKER_USER:-0:0} # default to root ownership
+    volumes:
+      - .:/tmp/meta-redengin:ro
+      - ./build:/tmp/build
+    working_dir: /tmp/build
+    command: runqemu kvm
 
   toaster:
     ports:
@@ -19,7 +33,7 @@ services:
       dockerfile: Dockerfile
       target: toaster
     # user: ${DOCKER_USER?created files will be owned by UID:GID on host}
-    user: ${DOCKER_USER:-0:0} # default to root access
+    user: ${DOCKER_USER:-0:0} # default to root ownership
     volumes:
       - .:/tmp/meta-redengin:ro
       - ./build:/tmp/build
