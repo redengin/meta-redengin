@@ -47,9 +47,10 @@ clean:
 	@rm -f 	${BUILD_DIR}/bitbake-cookerdaemon.log
 	@rm -f 	${BUILD_DIR}/bitbake.lock
 	@rm -f 	${BUILD_DIR}/bitbake.sock
+	@rm -f 	${BUILD_DIR}/hashserve.sock
 	@rm -rf ${BUILD_DIR}/buildhistory
 	@rm -rf ${BUILD_DIR}/cache
-	@rm -rf ${BUILD_DIR}/downloads
+#	@rm -rf ${BUILD_DIR}/downloads
 	@rm -f 	${BUILD_DIR}/pyshtables.py
 	@rm -rf ${BUILD_DIR}/sstate-cache
 	@rm -rf ${BUILD_DIR}/tmp-glibc
