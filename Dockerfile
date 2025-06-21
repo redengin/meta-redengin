@@ -11,7 +11,7 @@ RUN cd /opt \
  && git clone --depth=1 \
         --single-branch --branch ${POKY_VERSION} \
         git://git.yoctoproject.org/poky
-ENV PATH="/opt/poky/bitbake/bin:$PATH"
+ENV PATH="/opt/poky/bitbake/bin:/opt/poky/scripts:$PATH"
 USER yoctouser
 
 ENTRYPOINT ["/usr/local/bin/distro-entry.sh", \

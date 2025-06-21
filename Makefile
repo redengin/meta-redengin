@@ -2,7 +2,7 @@
 DOCKER_USER ?= $$(id -u):$$(id -g)
 
 # allow using alternative build dir (since these things are big)
-BUILD_DIR ?= build/
+BUILD_DIR ?= ./build/
 BUILD_DIR = /mnt/yocto-build/
 
 # bitbake configuration
@@ -33,6 +33,7 @@ bitbake:
 .PHONY: runqemu
 runqemu:
 	@DOCKER_USER=${DOCKER_USER} \
+	 BUILD_DIR=${BUILD_DIR} \
 		docker compose run --rm --remove-orphans qemu-kvm
 
 # web interface for configuring and running builds
