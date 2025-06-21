@@ -8,7 +8,8 @@ services:
     user: ${DOCKER_USER:-0:0} # default to root ownership
     volumes:
       - .:/tmp/meta-redengin:ro
-      - ./build:/tmp/build
+      - ./build/conf:/tmp/build/conf:ro
+      - ${BUILD_DIR}:/tmp/build
     working_dir: /tmp/build
 
   qemu-kvm:
@@ -21,7 +22,8 @@ services:
     user: ${DOCKER_USER:-0:0} # default to root ownership
     volumes:
       - .:/tmp/meta-redengin:ro
-      - ./build:/tmp/build
+      - ./build/conf:/tmp/build/conf:ro
+      - ${BUILD_DIR}:/tmp/build
     working_dir: /tmp/build
     command: runqemu kvm
 
@@ -36,7 +38,8 @@ services:
     user: ${DOCKER_USER:-0:0} # default to root ownership
     volumes:
       - .:/tmp/meta-redengin:ro
-      - ./build:/tmp/build
+      - ./build/conf:/tmp/build/conf:ro
+      - ${BUILD_DIR}:/tmp/build
     working_dir: /tmp/build
     environment:
       - BUILDDIR=/tmp/build

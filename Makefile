@@ -1,6 +1,10 @@
 # introspect user to create DOCKER_USER
 DOCKER_USER ?= $$(id -u):$$(id -g)
 
+# allow using alternative build dir (since these things are big)
+BUILD_DIR ?= build/
+BUILD_DIR = /mnt/yocto-build/
+
 # bitbake configuration
 BITBAKE_DISTRO ?= redengin
 BITBAKE_MACHINE ?= qemux86-64
@@ -9,6 +13,7 @@ BITBAKE_MACHINE ?= qemux86-64
 .PHONY: shell
 shell:
 	@DOCKER_USER=${DOCKER_USER} \
+	 BUILD_DIR=${BUILD_DIR} \
 		docker compose run --rm --remove-orphans crops \
 			sh
 
@@ -18,11 +23,17 @@ shell:
 RECIPE ?= core-image-minimal
 bitbake:
 	@DOCKER_USER=${DOCKER_USER} \
+	 BUILD_DIR=${BUILD_DIR} \
 		docker compose run --rm --remove-orphans crops \
 			sh -c "BB_ENV_PASSTHROUGH_ADDITIONS='DISTRO MACHINE' \
 				   DISTRO=${BITBAKE_DISTRO} \
 				   MACHINE=${BITBAKE_MACHINE} \
 				bitbake ${RECIPE}"
+
+.PHONY: runqemu
+runqemu:
+	@DOCKER_USER=${DOCKER_USER} \
+		docker compose run --rm --remove-orphans qemu-kvm
 
 # web interface for configuring and running builds
 .PHONY: toaster
@@ -30,21 +41,16 @@ toaster:
 	@DOCKER_USER=${DOCKER_USER} \
 		docker compose up toaster
 
-.PHONY: runqemu
-runqemu:
-	@DOCKER_USER=${DOCKER_USER} \
-		docker compose run --rm --remove-orphans qemu-kvm
-
 .PHONY: clean
 clean:
-	rm build/bitbake-cookerdaemon.log
-	rm bitbake.lock
-	rm bitbake.sock
-	rm -rf buildhistory
-	rm -rf cache
-	rm -rf downloads
-	rm pyshtables.py
-	rm -rf sstate-cache
-	rm -rf tmp-glibc
-	rm -rf tmp
-	rm -rf toaster_logs
+	@rm -f 	${BUILD_DIR}/bitbake-cookerdaemon.log
+	@rm -f 	${BUILD_DIR}/bitbake.lock
+	@rm -f 	${BUILD_DIR}/bitbake.sock
+	@rm -rf ${BUILD_DIR}/buildhistory
+	@rm -rf ${BUILD_DIR}/cache
+	@rm -rf ${BUILD_DIR}/downloads
+	@rm -f 	${BUILD_DIR}/pyshtables.py
+	@rm -rf ${BUILD_DIR}/sstate-cache
+	@rm -rf ${BUILD_DIR}/tmp-glibc
+	@rm -rf ${BUILD_DIR}/tmp
+	@rm -rf ${BUILD_DIR}/toaster_logs
